@@ -1,5 +1,14 @@
 This module provides an event queue mechanism optimized for microcontrollers. The usage is similar to Qt's signals and slots. 
 
+Tested on the following compilers:
+
+arm-none-eabi-gcc
+ARMCC
+EWARM
+armclang
+
+C++11 support is required
+
 First, you need to create a queue object. 
 
     modern_framework::task_queue(void *pbuffer, uint16_t pbuffer_len, void *qbuffer, uint16_t queue_len)
@@ -51,7 +60,7 @@ On the other hand, the implementation of the slot function should be a member fu
         ~myclass(){puts("~ctor\n");}
     };
 
-The parameters of signal and slots support any type except union, including
+The number of parameters of signal and slots is arbitrary,any type except union is supported, including
 
     T //The basic typed or class typed object will be copied into the queue, and when the slot function is called, it will be copied to the function again.
     T* //Any level pointer,only pointer will be copied
