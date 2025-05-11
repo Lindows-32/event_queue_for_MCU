@@ -3,8 +3,11 @@ This module provides an event queue mechanism optimized for microcontrollers. Th
 Tested on the following compilers:
 
 arm-none-eabi-gcc
+
 ARMCC
+
 EWARM
+
 armclang
 
 C++11 support is required
