@@ -73,3 +73,9 @@ Then you can deliver
     b.sgn(1,myclass(2,114.514));
     b.sgn2(b);
 
+Events can be polled in an infinite loop
+
+    while(true)
+        queue.process();
+
+Important: This is an early version, and the correctness of some logic has not been verified, such as when the queue is full, and there may be unsafe issues when interrupting delivery.
