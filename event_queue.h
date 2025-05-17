@@ -326,8 +326,8 @@ namespace modern_framework
         queue_node *_queue_buffer;
         uint16_t _param_buffer_len;
         uint16_t _queue_len;
-        uint16_t _begin;
-        uint16_t _end;
+        volatile uint16_t _begin;
+        volatile uint16_t _end;
         template <class...>
         friend class post_helper;
 
@@ -344,7 +344,7 @@ namespace modern_framework
         bool post(standard_fun *fun, void *pthis);
         param_buffer &get_param_buffer() { return _param_buffer; }
         template <class S, class C1, class SLOT, class C2>
-        void bind(S sig, C1 *sender, SLOT, C2 *reciever)
+        void bind(S sig, C1 *sender, SLOT*, C2 *reciever)
         {
             (sender->*sig)._task_queue = this;
             (sender->*sig)._pthis = reciever;
@@ -500,6 +500,10 @@ namespace modern_framework
         task_queue *_task_queue;
         void *_pthis;
         standard_fun *_fun;
+    public:
+        task_queue* queue(){return _task_queue;}
+        void* pthis(){return _pthis;}
+        standard_fun* funptr(){return _fun;}
     };
 
     template <class T>
@@ -704,6 +708,8 @@ namespace modern_framework
             {
                 (static_cast<C *>(pthis)->*member_fun)(forward<ARGS>(args)...);
             }
+
+            standard_fun* get_exec(){return exec;}
         };
     };
 
@@ -724,9 +730,11 @@ namespace modern_framework
             {
                 return (static_cast<C *>(pthis)->*member_fun)(forward<ARGS>(args)...);
             }
+
+            standard_fun* get_exec(){return exec;}
         };
     };
 }
 
-#define MKSLOT(member_fun) from_member_function<decltype(member_fun)>::to_slot_function<member_fun>()
+#define MKSLOT(member_fun) static_cast<modern_framework::from_member_function<decltype(member_fun)>::to_slot_function<member_fun>*>(nullptr)
 #endif // EVENT_QUEUE_H
